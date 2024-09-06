@@ -217,6 +217,7 @@ def initialize_app(config, no_studio):
                 'The endpoint you are trying to access does not exist on the server.'
             )
 
+        # Check for directory path traversal.
         full_path = os.path.normpath(os.path.join(static_root, path))
         if not full_path.startswith(str(static_root)):
             return http_error(
