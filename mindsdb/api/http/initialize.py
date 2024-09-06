@@ -225,7 +225,7 @@ def initialize_app(config, no_studio):
                 'You are not allowed to access this resource.'
             )
 
-        if os.path.isfile(os.path.join(static_root, path)):
+        if os.path.isfile(full_path):
             return send_from_directory(static_root, path)
         else:
             return send_from_directory(static_root, 'index.html')
