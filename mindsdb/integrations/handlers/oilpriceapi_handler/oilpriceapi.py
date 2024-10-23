@@ -12,7 +12,7 @@ class OilPriceAPIClient:
         headers = {'Content-type': 'application/json'}
         if self.api_key:
             headers['Authorization'] = 'Token ' + self.api_key
-        resp = requests.get(url, headers=headers, params=params)
+        resp = requests.get(url, headers=headers, params=params, timeout=60)
         content = {}
         if resp.status_code == 200:
             content = {'content': resp.json(), 'code': 200}

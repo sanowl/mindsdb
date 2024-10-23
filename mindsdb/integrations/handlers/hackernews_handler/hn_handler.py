@@ -39,7 +39,7 @@ class HackerNewsHandler(APIHandler):
 
     def check_connection(self) -> StatusResponse:
         try:
-            response = requests.get(f'{self.base_url}/maxitem.json')
+            response = requests.get(f'{self.base_url}/maxitem.json', timeout=60)
             response.raise_for_status()
             return StatusResponse(True)
         except Exception as e:
@@ -58,14 +58,14 @@ class HackerNewsHandler(APIHandler):
 
     def get_df_from_class(self, table: StoriesTable = None, limit: int = None):
         url = f'{self.base_url}/{table.json_endpoint}'
-        response = requests.get(url)
+        response = requests.get(url, timeout=60)
         data = response.json()
         stories_data = []
         if limit is None:
             limit = len(data)
         for story_id in data[:limit]:
             url = f'{self.base_url}/item/{story_id}.json'
-            response = requests.get(url)
+            response = requests.get(url, timeout=60)
             story_data = response.json()
             stories_data.append(story_data)
         return pd.DataFrame(stories_data, columns=table.columns)
@@ -83,13 +83,13 @@ class HackerNewsHandler(APIHandler):
         elif method_name == 'get_comments':
             item_id = params.get('item_id')
             url = f'{self.base_url}/item/{item_id}.json'
-            response = requests.get(url)
+            response = requests.get(url, timeout=60)
             item_data = response.json()
             if 'kids' in item_data:
                 comments_data = []
                 for comment_id in item_data['kids']:
                     url = f'{self.base_url}/item/{comment_id}.json'
-                    response = requests.get(url)
+                    response = requests.get(url, timeout=60)
                     comment_data = response.json()
                     comments_data.append(comment_data)
                 df = pd.DataFrame(comments_data)

@@ -16,7 +16,7 @@ class ClipdropClient:
 
     def make_request(self, url, files={}, data={}):
         headers = {"x-api-key": self.api_key}
-        resp = requests.post(url, headers=headers, files=files, data=data)
+        resp = requests.post(url, headers=headers, files=files, data=data, timeout=60)
         if resp.status_code == 200:
             saved_path = self.write_to_file(resp.content)
             return saved_path
@@ -30,7 +30,7 @@ class ClipdropClient:
 
     def download_image(self, url):
         img_ext = self.image_extension_check(url)
-        res = requests.get(url)
+        res = requests.get(url, timeout=60)
         return {"img_ext": img_ext, "content": res.content}
 
     def remove_text(self, img_url):

@@ -313,7 +313,7 @@ class GmailHandler(APIHandler):
     def _download_secret_file(self, secret_file):
         # Giving more priority to the S3 file
         if self.credentials_url:
-            response = requests.get(self.credentials_url)
+            response = requests.get(self.credentials_url, timeout=60)
             if response.status_code == 200:
                 with open(secret_file, 'w') as creds:
                     creds.write(response.text)

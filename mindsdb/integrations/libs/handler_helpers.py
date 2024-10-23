@@ -45,7 +45,7 @@ def registry(url, data, interval):
     def worker():
         while True:
             try:
-                requests.post(url, json=data, headers={"Content-Type": "application/json"})
+                requests.post(url, json=data, headers={"Content-Type": "application/json"}, timeout=60)
             except Exception as e:
                 logger.error("handler_register: unable to register the service - %s", e)
             time.sleep(interval)

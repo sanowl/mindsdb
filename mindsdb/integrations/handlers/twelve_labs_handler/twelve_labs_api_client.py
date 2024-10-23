@@ -488,21 +488,21 @@ class TwelveLabsAPIClient:
                 url=self.base_url + endpoint,
                 headers=headers,
                 params=data if data else {},
-            )
+            timeout=60)
 
         elif method == "POST":
             response = requests.post(
                 url=self.base_url + endpoint,
                 headers=headers,
                 json=data if data else {},
-            )
+            timeout=60)
 
         elif method == "PUT":
             response = requests.put(
                 url=self.base_url + endpoint,
                 headers=headers,
                 json=data if data else {},
-            )
+            timeout=60)
 
         else:
             raise Exception(f"Method {method} not supported yet.")
@@ -541,8 +541,8 @@ class TwelveLabsAPIClient:
             response = requests.post(
                 url=self.base_url + endpoint,
                 headers=headers,
-                data=multipart_data if multipart_data else {}
-            )
+                data=multipart_data if multipart_data else {}, 
+            timeout=60)
 
         else:
             raise Exception(f"Method {method} not supported yet.")

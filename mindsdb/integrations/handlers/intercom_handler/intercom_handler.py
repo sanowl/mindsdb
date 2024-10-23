@@ -61,8 +61,8 @@ class IntercomHandler(APIHandler):
             try:
                 response = requests.get(
                     url=self._baseUrl,
-                    headers=self._headers
-                )
+                    headers=self._headers, 
+                timeout=60)
                 if response.status_code == 200:
                     self.connection = response
                     self.is_connected = True
@@ -94,7 +94,7 @@ class IntercomHandler(APIHandler):
         url = f"{self._baseUrl}{endpoint}"
         json_data = json.loads(data) if data else None
 
-        response = requests.request(method.upper(), url, headers=self._headers, params=params, json=json_data)
+        response = requests.request(method.upper(), url, headers=self._headers, params=params, json=json_data, timeout=60)
 
         if response.status_code == 200:
             data = response.json()

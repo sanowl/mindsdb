@@ -81,7 +81,7 @@ class CoinBaseHandler(APIHandler):
         path = "/products/" + symbol + "/candles?granularity=" + str(granularity) + "&start=" + start_time_iso
         headers = self.generate_api_headers("GET", path)
         url = _BASE_COINBASE_US_URL + path
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=60)
         candles = response.json()
         for candle in candles:
             dt = datetime.datetime.fromtimestamp(candle[0], None).isoformat()

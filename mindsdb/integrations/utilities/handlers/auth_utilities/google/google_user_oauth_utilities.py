@@ -64,7 +64,7 @@ class GoogleUserOAuth2Manager:
         # if credentials_url is set, attempt to download the file
         # this will be given preference over credentials_file
         if self.credentials_url:
-            response = requests.get(self.credentials_url)
+            response = requests.get(self.credentials_url, timeout=60)
             if response.status_code == 200:
                 with open(secret_file, 'w') as creds:
                     creds.write(response.text)
