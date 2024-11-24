@@ -234,7 +234,7 @@ class MysqlProxy(SocketServer.BaseRequestHandler):
             logger.debug("switch to SSL")
             self.session.is_ssl = True
 
-            ssl_context = ssl.SSLContext()
+            ssl_context = ssl.SSLContext(protocol=ssl.PROTOCOL_TLS_CLIENT)
             ssl_context.load_cert_chain(self.server.cert_path)
             ssl_socket = ssl_context.wrap_socket(
                 self.socket, server_side=True, do_handshake_on_connect=True
