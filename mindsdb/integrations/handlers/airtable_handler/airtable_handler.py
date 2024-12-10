@@ -1,7 +1,6 @@
 from typing import Optional
 
 import pandas as pd
-import requests
 import duckdb
 
 from mindsdb_sql import parse_sql
@@ -14,6 +13,7 @@ from mindsdb.integrations.libs.response import (
     HandlerResponse as Response,
     RESPONSE_TYPE
 )
+from security import safe_requests
 
 logger = log.getLogger(__name__)
 
@@ -59,7 +59,7 @@ class AirtableHandler(DatabaseHandler):
         url = f"https://api.airtable.com/v0/{self.connection_data['base_id']}/{self.connection_data['table_name']}"
         headers = {"Authorization": "Bearer " + self.connection_data['api_key']}
 
-        response = requests.get(url, headers=headers)
+        response = safe_requests.get(url, headers=headers)
         response = response.json()
         records = response['records']
 
@@ -68,7 +68,7 @@ class AirtableHandler(DatabaseHandler):
             try:
                 if response['offset']:
                     params = {"offset": response['offset']}
-                    response = requests.get(url, params=params, headers=headers)
+                    response = safe_requests.get(url, params=params, headers=headers)
                     response = response.json()
 
                     new_records = response['records']

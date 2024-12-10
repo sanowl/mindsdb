@@ -1,4 +1,4 @@
-import requests
+from security import safe_requests
 
 
 class AQIClient:
@@ -8,7 +8,7 @@ class AQIClient:
         self.base_endpoint = "https://api.waqi.info/feed"
 
     def make_request(self, url):
-        resp = requests.get(url, params=self.params)
+        resp = safe_requests.get(url, params=self.params)
         res = resp.json()
         content = {}
         if res["status"] == "ok":

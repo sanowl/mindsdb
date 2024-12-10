@@ -6,7 +6,6 @@ import time
 from collections import defaultdict
 import pytz
 import io
-import requests
 
 import pandas as pd
 import tweepy
@@ -25,6 +24,7 @@ from mindsdb.integrations.libs.response import (
     HandlerResponse as Response,
     RESPONSE_TYPE
 )
+from security import safe_requests
 
 logger = log.getLogger(__name__)
 
@@ -159,7 +159,7 @@ class TweetsTable(APITable):
                 media_url = params.pop('media_url')
 
                 # create an in memory file
-                resp = requests.get(media_url)
+                resp = safe_requests.get(media_url)
                 img = io.BytesIO(resp.content)
 
                 # upload media to twitter

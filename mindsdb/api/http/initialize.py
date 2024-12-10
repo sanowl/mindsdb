@@ -50,6 +50,7 @@ from mindsdb.utilities.json_encoder import CustomJSONEncoder
 from mindsdb.utilities.ps import is_pid_listen_port, wait_func_is_true
 from mindsdb.utilities.telemetry import inject_telemetry_to_static
 from mindsdb.utilities.sentry import sentry_sdk  # noqa: F401
+from security import safe_requests
 
 logger = log.getLogger(__name__)
 
@@ -73,7 +74,7 @@ def custom_output_json(data, code, headers=None):
 def get_last_compatible_gui_version() -> LooseVersion:
     logger.debug("Getting last compatible frontend..")
     try:
-        res = requests.get('https://mindsdb-web-builds.s3.amazonaws.com/compatible-config.json', timeout=5)
+        res = safe_requests.get('https://mindsdb-web-builds.s3.amazonaws.com/compatible-config.json', timeout=5)
     except (ConnectionError, requests.exceptions.ConnectionError) as e:
         logger.error(f"Is no connection. {e}")
         return False

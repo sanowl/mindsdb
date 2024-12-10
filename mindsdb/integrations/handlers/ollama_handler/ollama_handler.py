@@ -6,6 +6,7 @@ import pandas as pd
 
 from mindsdb.integrations.libs.base import BaseMLEngine
 from mindsdb.integrations.libs.llm.utils import get_completed_prompts
+from security import safe_requests
 
 
 class OllamaHandler(BaseMLEngine):
@@ -24,7 +25,7 @@ class OllamaHandler(BaseMLEngine):
 
         # check ollama service health
         connection = args.get('ollama_serve_url', OllamaHandler.DEFAULT_SERVE_URL)
-        status = requests.get(connection + '/api/tags').status_code
+        status = safe_requests.get(connection + '/api/tags').status_code
         if status != 200:
             raise Exception(f"Ollama service is not working (status `{status}`). Please double check it is running and try again.")  # noqa
 

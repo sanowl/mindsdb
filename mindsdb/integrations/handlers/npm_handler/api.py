@@ -1,10 +1,11 @@
 import requests
+from security import safe_requests
 
 
 class NPM:
 
     def __init__(self, package_name: str):
-        resp = requests.get("https://api.npms.io/v2/package/" + package_name)
+        resp = safe_requests.get("https://api.npms.io/v2/package/" + package_name)
         if not resp or resp.status_code != 200:
             raise Exception(f"Unable to get package datails: '{package_name}'")
         self.data = resp.json()

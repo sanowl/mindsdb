@@ -7,6 +7,7 @@ import requests
 import pandas as pd
 from collections import OrderedDict
 from mindsdb.integrations.libs.const import HANDLER_CONNECTION_ARG_TYPE as ARG_TYPE
+from security import safe_requests
 
 logger = log.getLogger(__name__)
 
@@ -63,7 +64,7 @@ class InstatusHandler(APIHandler):
         if self._api_key:
             try:
                 headers = {"Authorization": f"Bearer {self._api_key}"}
-                response = requests.get(f"{self._base_url}/v2/pages", headers=headers)
+                response = safe_requests.get(f"{self._base_url}/v2/pages", headers=headers)
 
                 if response.status_code == 200:
                     self.connection = response

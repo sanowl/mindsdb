@@ -1,12 +1,12 @@
 from typing import Optional, Dict
 import pandas as pd
-import requests
 
 from monkeylearn import MonkeyLearn
 
 from mindsdb.integrations.libs.base import BaseMLEngine
 
 from mindsdb.integrations.utilities.handler_utils import get_api_key
+from security import safe_requests
 
 
 class monkeylearnHandler(BaseMLEngine):
@@ -29,7 +29,7 @@ class monkeylearnHandler(BaseMLEngine):
         model_id = args["model_id"]
         # Check whether the model_id given by user exists in the user account or monkeylearn pre-trained models
         url = 'https://api.monkeylearn.com/v3/classifiers/'
-        response = requests.get(url, headers={'Authorization': 'Token {}'.format(api_key)})
+        response = safe_requests.get(url, headers={'Authorization': 'Token {}'.format(api_key)})
         if response.status_code == 200:
             models = response.json()
             models_list = [model['id'] for model in models]

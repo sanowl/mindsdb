@@ -1,6 +1,6 @@
-import requests
 from requests import Response
 from enum import Enum
+from security import safe_requests
 
 
 class TripAdvisorAPICall(Enum):
@@ -32,7 +32,7 @@ class TripAdvisorAPI:
         )
 
         headers = {"accept": "application/json"}
-        response = requests.get(url, headers=headers)
+        response = safe_requests.get(url, headers=headers)
         status_code = response.status_code
 
         if status_code >= 400 and status_code <= 499:
@@ -46,7 +46,7 @@ class TripAdvisorAPI:
         Getting a response from the API call
         """
         headers = {"accept": "application/json"}
-        response = requests.get(url, headers=headers)
+        response = safe_requests.get(url, headers=headers)
         return response
 
     def getURLQuery(self, url: str, params_dict: dict) -> str:

@@ -11,6 +11,7 @@ from mindsdb.api.http.namespaces.configs.auth import ns_conf
 from mindsdb.metrics.metrics import api_endpoint_metrics
 from mindsdb.utilities.config import Config
 from mindsdb.utilities import log
+from security import safe_requests
 
 logger = log.getLogger(__name__)
 
@@ -42,7 +43,7 @@ def request_user_info(access_token: str = None) -> dict:
 
     auth_server = Config()["auth"]["oauth"]["server_host"]
 
-    response = requests.get(
+    response = safe_requests.get(
         f"https://{auth_server}/auth/userinfo",
         headers={"Authorization": f"Bearer {access_token}"},
         timeout=5,

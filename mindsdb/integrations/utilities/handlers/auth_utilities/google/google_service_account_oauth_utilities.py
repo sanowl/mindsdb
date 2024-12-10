@@ -1,11 +1,11 @@
 import json
-import requests
 from typing import Union
 from google.oauth2 import service_account
 
 from mindsdb.utilities import log
 
 from ..exceptions import NoCredentialsException, AuthException
+from security import safe_requests
 
 
 logger = log.getLogger(__name__)
@@ -40,7 +40,7 @@ class GoogleServiceAccountOAuth2Manager:
             raise AuthException(f"Authentication failed: {e}")
 
     def _download_credentials_file(self):
-        response = requests.get(self.credentials_url)
+        response = safe_requests.get(self.credentials_url)
         # raise a HTTPError if the status is 4xx or 5xx
         response.raise_for_status()
 

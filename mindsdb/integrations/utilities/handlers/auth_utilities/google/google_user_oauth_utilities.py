@@ -1,6 +1,5 @@
 import os
 import json
-import requests
 import datetime as dt
 from flask import request
 from shutil import copyfile
@@ -13,6 +12,7 @@ from google_auth_oauthlib.flow import Flow
 
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
+from security import safe_requests
 
 logger = log.getLogger(__name__)
 
@@ -64,7 +64,7 @@ class GoogleUserOAuth2Manager:
         # if credentials_url is set, attempt to download the file
         # this will be given preference over credentials_file
         if self.credentials_url:
-            response = requests.get(self.credentials_url)
+            response = safe_requests.get(self.credentials_url)
             if response.status_code == 200:
                 with open(secret_file, 'w') as creds:
                     creds.write(response.text)
