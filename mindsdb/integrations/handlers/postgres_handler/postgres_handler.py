@@ -335,13 +335,13 @@ class PostgresHandler(DatabaseHandler):
              DECLARE
              BEGIN
                {before}
-               PERFORM pg_notify( '{trigger_name}', row_to_json(NEW)::text);
+               PERFORM pg_notify( ?, row_to_json(NEW)::text);
                {after}
                RETURN NEW;
              END;
              $$ LANGUAGE plpgsql;
          '''
-        conn.execute(func_code)
+        conn.execute(func_code, (trigger_name, ))
 
         # for after update - new and old have the same values
         conn.execute(f'''
