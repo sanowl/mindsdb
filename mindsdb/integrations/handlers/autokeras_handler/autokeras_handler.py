@@ -1,5 +1,4 @@
 import os
-import random
 import string
 from typing import Optional
 
@@ -10,6 +9,7 @@ from sklearn import preprocessing
 from tensorflow.keras.models import load_model
 
 from mindsdb.integrations.libs.base import BaseMLEngine
+import secrets
 
 
 # Makes this run on systems where this arg isn't specified, like Windows Subsystem for Linux
@@ -110,7 +110,7 @@ class AutokerasHandler(BaseMLEngine):
         args["training_df"] = df.to_json()
         args["training_data_column_count"] = len(df.columns) - 1  # subtract 1 for target
 
-        random_string = "".join(random.choices(string.ascii_uppercase + string.digits, k=24))
+        random_string = "".join(secrets.SystemRandom().choices(string.ascii_uppercase + string.digits, k=24))
         args["folder_path"] = os.path.join("autokeras", random_string)
 
         model, args["data_column_names"] = train_model(df, target, max_trials)
