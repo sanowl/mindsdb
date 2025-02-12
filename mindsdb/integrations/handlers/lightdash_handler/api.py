@@ -18,7 +18,7 @@ class Lightdash:
         }
         if data is not None:
             kwargs["data"] = data
-        return requests.request(**kwargs)
+        return requests.request(**kwargs, timeout=60)
 
     def is_connected(self) -> bool:
         if self.get_user() is not None:

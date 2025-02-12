@@ -33,7 +33,7 @@ class RayServeHandler(BaseMLEngine):
         try:
             resp = requests.post(args['train_url'],
                                  json={'df': df.to_json(orient='records'), 'target': target},
-                                 headers={'content-type': 'application/json; format=pandas-records'})
+                                 headers={'content-type': 'application/json; format=pandas-records'}, timeout=60)
         except requests.exceptions.InvalidSchema:
             raise Exception("Error: The URL provided for the training endpoint is invalid.")
 
@@ -45,7 +45,7 @@ class RayServeHandler(BaseMLEngine):
         args = self.model_storage.json_get('args')  # override any incoming args for now
         resp = requests.post(args['predict_url'],
                              json={'df': df.to_json(orient='records')},
-                             headers={'content-type': 'application/json; format=pandas-records'})
+                             headers={'content-type': 'application/json; format=pandas-records'}, timeout=60)
         response = resp.json()
 
         target = args['target']

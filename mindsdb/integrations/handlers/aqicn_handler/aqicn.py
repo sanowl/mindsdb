@@ -8,7 +8,7 @@ class AQIClient:
         self.base_endpoint = "https://api.waqi.info/feed"
 
     def make_request(self, url):
-        resp = requests.get(url, params=self.params)
+        resp = requests.get(url, params=self.params, timeout=60)
         res = resp.json()
         content = {}
         if res["status"] == "ok":

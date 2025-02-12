@@ -116,7 +116,7 @@ class ShopifyHandler(APIHandler):
                 "accept": "application/json",
                 "Content-Type": "application/json"
             }
-            if requests.get(url, headers=headers).status_code == 200:
+            if requests.get(url, headers=headers, timeout=60).status_code == 200:
                 response.success = True
             else:
                 response.success = False

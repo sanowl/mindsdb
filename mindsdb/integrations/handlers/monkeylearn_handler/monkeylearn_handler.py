@@ -29,7 +29,7 @@ class monkeylearnHandler(BaseMLEngine):
         model_id = args["model_id"]
         # Check whether the model_id given by user exists in the user account or monkeylearn pre-trained models
         url = 'https://api.monkeylearn.com/v3/classifiers/'
-        response = requests.get(url, headers={'Authorization': 'Token {}'.format(api_key)})
+        response = requests.get(url, headers={'Authorization': 'Token {}'.format(api_key)}, timeout=60)
         if response.status_code == 200:
             models = response.json()
             models_list = [model['id'] for model in models]

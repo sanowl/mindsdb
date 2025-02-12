@@ -24,7 +24,7 @@ class OllamaHandler(BaseMLEngine):
 
         # check ollama service health
         connection = args.get('ollama_serve_url', OllamaHandler.DEFAULT_SERVE_URL)
-        status = requests.get(connection + '/api/tags').status_code
+        status = requests.get(connection + '/api/tags', timeout=60).status_code
         if status != 200:
             raise Exception(f"Ollama service is not working (status `{status}`). Please double check it is running and try again.")  # noqa
 
@@ -45,8 +45,8 @@ class OllamaHandler(BaseMLEngine):
                         json={
                             'model': args['model_name'],
                             'prompt': 'Hello.',
-                        }
-                    ).status_code
+                        }, 
+                    timeout=60).status_code
                     responses[endpoint] = code
                 except Exception:
                     responses[endpoint] = 500
@@ -58,7 +58,7 @@ class OllamaHandler(BaseMLEngine):
             # pull model (blocking operation) and serve
             # TODO: point to the engine storage folder instead of default location
             connection = args.get('ollama_serve_url', OllamaHandler.DEFAULT_SERVE_URL)
-            requests.post(connection + '/api/pull', json={'name': args['model_name']})
+            requests.post(connection + '/api/pull', json={'name': args['model_name']}, timeout=60)
             # try one last time
             responses = _model_check()
             if 200 not in responses.values():
@@ -116,8 +116,8 @@ class OllamaHandler(BaseMLEngine):
                     json={
                         'model': model_name,
                         'prompt': row['__mdb_prompt'],
-                    }
-                )
+                    }, 
+                timeout=60)
                 lines = raw_output.content.decode().split('\n')  # stream of output tokens
 
                 values = []
@@ -154,7 +154,7 @@ class OllamaHandler(BaseMLEngine):
         # get model info
         else:
             connection = args.get('ollama_serve_url', OllamaHandler.DEFAULT_SERVE_URL)
-            model_info = requests.post(connection + '/api/show', json={'name': model_name}).json()
+            model_info = requests.post(connection + '/api/show', json={'name': model_name}, timeout=60).json()
             return pd.DataFrame([[
                 model_name,
                 model_info.get('license', 'N/A'),

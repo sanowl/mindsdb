@@ -791,7 +791,7 @@ class CustomerReviews(APITable):
             "accept": "application/json",
             "Content-Type": "application/json"
         }
-        json_response = requests.get(url, headers=headers).json()
+        json_response = requests.get(url, headers=headers, timeout=60).json()
         return [review for review in json_response['reviews']] if 'reviews' in json_response else []
 
 class CarrierServiceTable(APITable):

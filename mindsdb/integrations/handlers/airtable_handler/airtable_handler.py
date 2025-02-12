@@ -59,7 +59,7 @@ class AirtableHandler(DatabaseHandler):
         url = f"https://api.airtable.com/v0/{self.connection_data['base_id']}/{self.connection_data['table_name']}"
         headers = {"Authorization": "Bearer " + self.connection_data['api_key']}
 
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=60)
         response = response.json()
         records = response['records']
 
@@ -68,7 +68,7 @@ class AirtableHandler(DatabaseHandler):
             try:
                 if response['offset']:
                     params = {"offset": response['offset']}
-                    response = requests.get(url, params=params, headers=headers)
+                    response = requests.get(url, params=params, headers=headers, timeout=60)
                     response = response.json()
 
                     new_records = response['records']
