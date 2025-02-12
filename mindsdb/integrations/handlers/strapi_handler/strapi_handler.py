@@ -58,7 +58,7 @@ class StrapiHandler(APIHandler):
 
         try:
             headers = {"Authorization": f"Bearer {self._api_token}"}
-            response = requests.get(f"{self._base_url}", headers=headers)
+            response = requests.get(f"{self._base_url}", headers=headers, timeout=60)
             if response.status_code == 200:
                 self.connection = response
                 self.is_connected = True
@@ -93,9 +93,9 @@ class StrapiHandler(APIHandler):
             headers['Content-Type'] = 'application/json'
 
             if method.upper() in ('POST', 'PUT', 'DELETE'):
-                response = requests.request(method, url, headers=headers, params=params, data=json_data)
+                response = requests.request(method, url, headers=headers, params=params, data=json_data, timeout=60)
             else:
-                response = requests.get(url, headers=headers, params=params)
+                response = requests.get(url, headers=headers, params=params, timeout=60)
 
             if response.status_code == 200:
                 data = response.json()

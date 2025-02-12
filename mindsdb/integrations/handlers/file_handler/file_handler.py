@@ -392,7 +392,7 @@ class FileHandler(DatabaseHandler):
     def _fetch_url(url: str) -> str:
         temp_dir = tempfile.mkdtemp(prefix="mindsdb_file_url_")
         try:
-            r = requests.get(url, stream=True)
+            r = requests.get(url, stream=True, timeout=60)
             if r.status_code == 200:
                 with open(os.path.join(temp_dir, "file"), "wb") as f:
                     for chunk in r:

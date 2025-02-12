@@ -87,7 +87,7 @@ class EventStoreDB(DatabaseHandler):
 
     def check_connection(self) -> StatusResponse:
         try:
-            response = requests.get(build_health_url(self.basic_url), verify=self.tlsverify)
+            response = requests.get(build_health_url(self.basic_url), verify=self.tlsverify, timeout=60)
             if response.status_code == 204:
                 return StatusResponse(True)
         except Exception as e:
@@ -101,7 +101,7 @@ class EventStoreDB(DatabaseHandler):
                 'embed': 'tryharder'
             }
             stream_endpoint = build_stream_url(self.basic_url, stream_name)
-            response = requests.get(stream_endpoint, params=params, headers=self.headers, verify=self.tlsverify)
+            response = requests.get(stream_endpoint, params=params, headers=self.headers, verify=self.tlsverify, timeout=60)
             entries = []
             if response is not None and response.status_code == 200:
                 json_response = response.json()
@@ -116,7 +116,7 @@ class EventStoreDB(DatabaseHandler):
                                 if link['relation'] == 'next':
                                     end_of_stream = False
                                     response = requests.get(build_next_url(link['uri'], self.read_batch_size),
-                                                            params=params, headers=self.headers, verify=self.tlsverify)
+                                                            params=params, headers=self.headers, verify=self.tlsverify, timeout=60)
                                     json_response = response.json()
                                     for entry in json_response["entries"]:
                                         entry = entry_to_df(entry)
@@ -148,7 +148,7 @@ class EventStoreDB(DatabaseHandler):
             'embed': 'tryharder'
         }
         stream_endpoint = build_streams_url(self.basic_url)
-        response = requests.get(stream_endpoint, params=params, headers=self.headers, verify=self.tlsverify)
+        response = requests.get(stream_endpoint, params=params, headers=self.headers, verify=self.tlsverify, timeout=60)
         streams = []
         if response is not None and response.status_code == 200:
             json_response = response.json()
@@ -163,7 +163,7 @@ class EventStoreDB(DatabaseHandler):
                             if link['relation'] == 'next':
                                 end_of_stream = False
                                 response = requests.get(build_next_url(link['uri'], self.read_batch_size),
-                                                        params=params, headers=self.headers, verify=self.tlsverify)
+                                                        params=params, headers=self.headers, verify=self.tlsverify, timeout=60)
                                 json_response = response.json()
                                 for entry in json_response["entries"]:
                                     if "title" in entry:
@@ -183,7 +183,7 @@ class EventStoreDB(DatabaseHandler):
             'embed': 'tryharder'
         }
         stream_endpoint = build_stream_url_last_event(self.basic_url, table_name)
-        response = requests.get(stream_endpoint, params=params, headers=self.headers, verify=self.tlsverify)
+        response = requests.get(stream_endpoint, params=params, headers=self.headers, verify=self.tlsverify, timeout=60)
         entry = None
         if response is not None and response.status_code == 200:
             json_response = response.json()

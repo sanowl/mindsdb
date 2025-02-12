@@ -314,7 +314,7 @@ class GoogleGeminiHandler(BaseMLEngine):
     def vision_worker(self, args: Dict, df: pd.DataFrame):
         def get_img(url):
             # URL Validation
-            response = requests.get(url)
+            response = requests.get(url, timeout=60)
             if response.status_code == 200 and response.headers.get(
                 "content-type", ""
             ).startswith("image/"):

@@ -79,7 +79,7 @@ class StabilityAPIClient:
 
         response = requests.get(url, headers={
             "Authorization": f"Bearer {self.api_key}"
-        })
+        }, timeout=60)
 
         if response.status_code != 200:
             raise Exception("Non-200 response: " + str(response.text))
@@ -108,7 +108,7 @@ class StabilityAPIClient:
         Returns:
             Downloaded image
         """
-        return Image.open(requests.get(image_url, stream=True).raw)
+        return Image.open(requests.get(image_url, stream=True, timeout=60).raw)
 
     def text_to_image(self, prompt, height=1024, width=1024):
         """Converts the given text to image using stability API.

@@ -32,7 +32,7 @@ class TripAdvisorAPI:
         )
 
         headers = {"accept": "application/json"}
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=60)
         status_code = response.status_code
 
         if status_code >= 400 and status_code <= 499:
@@ -46,7 +46,7 @@ class TripAdvisorAPI:
         Getting a response from the API call
         """
         headers = {"accept": "application/json"}
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=60)
         return response
 
     def getURLQuery(self, url: str, params_dict: dict) -> str:

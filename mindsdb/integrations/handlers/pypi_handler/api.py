@@ -35,7 +35,7 @@ class PyPI:
         if period:
             params["period"] = period
 
-        payload = requests.get(endpoint, params=params).json()["data"]
+        payload = requests.get(endpoint, params=params, timeout=60).json()["data"]
 
         df = self.__to_dataframe(payload, [0])
 
@@ -56,7 +56,7 @@ class PyPI:
         if mirrors is not None:
             params["mirrors"] = str(mirrors).lower()
 
-        payload = requests.get(endpoint, params=params).json()["data"]
+        payload = requests.get(endpoint, params=params, timeout=60).json()["data"]
         df = self.__to_dataframe(payload, limit=self.limit)
 
         return df
@@ -76,7 +76,7 @@ class PyPI:
         if version is not None:
             params["version"] = version
 
-        payload = requests.get(endpoint, params=params).json()["data"]
+        payload = requests.get(endpoint, params=params, timeout=60).json()["data"]
         df = self.__to_dataframe(payload, limit=self.limit)
 
         return df
@@ -96,7 +96,7 @@ class PyPI:
         if version is not None:
             params["version"] = version
 
-        payload = requests.get(endpoint, params=params).json()["data"]
+        payload = requests.get(endpoint, params=params, timeout=60).json()["data"]
         df = self.__to_dataframe(payload, limit=self.limit)
 
         return df
@@ -116,7 +116,7 @@ class PyPI:
         if os is not None:
             params["os"] = os
 
-        payload = requests.get(endpoint, params=params).json()["data"]
+        payload = requests.get(endpoint, params=params, timeout=60).json()["data"]
         df = self.__to_dataframe(payload, limit=self.limit)
 
         return df

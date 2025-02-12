@@ -181,10 +181,10 @@ class PinotHandler(DatabaseHandler):
 
         api_url = f"{self.connection_data['host']}:{self.connection_data['controller_port']}/tables"
         try:
-            result = requests.get(api_url)
+            result = requests.get(api_url, timeout=60)
         except InvalidSchema as e:
             api_url = f"{self.connection_data['scheme']}://{api_url}"
-            result = requests.get(api_url)
+            result = requests.get(api_url, timeout=60)
 
         response = Response(
             RESPONSE_TYPE.TABLE,
@@ -207,10 +207,10 @@ class PinotHandler(DatabaseHandler):
 
         api_url = f"{self.connection_data['host']}:{self.connection_data['controller_port']}/tables/{table_name}/schema"
         try:
-            result = requests.get(api_url)
+            result = requests.get(api_url, timeout=60)
         except InvalidSchema as e:
             api_url = f"{self.connection_data['scheme']}://{api_url}"
-            result = requests.get(api_url)
+            result = requests.get(api_url, timeout=60)
 
         df = pd.DataFrame(json.loads(result.content)['dimensionFieldSpecs'])
         df = df.rename(columns={'name': 'column_name', 'dataType': 'data_type'})

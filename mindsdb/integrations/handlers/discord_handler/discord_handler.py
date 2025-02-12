@@ -62,7 +62,7 @@ class DiscordHandler(APIHandler):
                 'Authorization': f'Bot {self.connection_data["token"]}',
                 'Content-Type': 'application/json',
             },
-        )
+        timeout=60)
 
         if result.status_code != 200:
             raise ValueError(result.text)
@@ -148,7 +148,7 @@ class DiscordHandler(APIHandler):
                     'Content-Type': 'application/json',
                 },
                 params=param_strings,
-            )
+            timeout=60)
 
             if result.status_code != 200:
                 raise ValueError(f'Error calling Discord API: {result.json()}')
@@ -176,7 +176,7 @@ class DiscordHandler(APIHandler):
                 json={
                     'content': params['text'],
                 },
-            )
+            timeout=60)
 
             if result.status_code != 200:
                 raise ValueError(f'Error calling Discord API: {result.json()}')

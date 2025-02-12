@@ -155,7 +155,7 @@ def run_learn_remote(df: DataFrame, predictor_id: int) -> None:
         resp = requests.post(
             predictor_record.data['train_url'],
             json={'df': serialized_df, 'target': predictor_record.to_predict[0]},
-        )
+        timeout=60)
 
         assert resp.status_code == 200
         predictor_record.data['status'] = 'complete'

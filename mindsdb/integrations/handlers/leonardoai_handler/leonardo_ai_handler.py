@@ -53,8 +53,8 @@ class LeonardoAIHandler(BaseMLEngine):
             headers={
                 "accept": "application/json",
                 "authorization": f"Bearer {api_key}"
-            }
-        )
+            }, 
+        timeout=60)
 
         # if valid, check if the model is valid
         try:
@@ -131,8 +131,8 @@ class LeonardoAIHandler(BaseMLEngine):
             headers={
                 "accept": "application/json",
                 "authorization": f"Bearer {api_key}"
-            }
-        )
+            }, 
+        timeout=60)
 
         models = self.connection.json()
 
@@ -181,7 +181,7 @@ class LeonardoAIHandler(BaseMLEngine):
         }
 
         # Make a POST request to generate the image
-        response_generation = requests.post(generation_url, json=generation_payload, headers=post_headers)
+        response_generation = requests.post(generation_url, json=generation_payload, headers=post_headers, timeout=60)
         generation_data = response_generation.json()
 
         # Wait for 15 seconds
@@ -195,7 +195,7 @@ class LeonardoAIHandler(BaseMLEngine):
         retrieve_url = f"https://cloud.leonardo.ai/api/rest/v1/generations/{generation_id}"
 
         # GET request to retrieve image URLs
-        response_retrieve = requests.get(retrieve_url, headers=get_headers)
+        response_retrieve = requests.get(retrieve_url, headers=get_headers, timeout=60)
         retrieve_data = response_retrieve.json()
 
         # extract URLs from the response

@@ -151,8 +151,8 @@ def getresponse(
     response: may return based on the response code
     """
     response = requests.request(
-        request_type, url, headers=headers, data=payload, files=files
-    )
+        request_type, url, headers=headers, data=payload, files=files, 
+    timeout=60)
     status_code = response.status_code
 
     if 400 <= status_code <= 499:

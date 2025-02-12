@@ -52,7 +52,7 @@ class SAPERP:
         }
         if data is not None:
             kwargs["data"] = data
-        return requests.request(**kwargs)
+        return requests.request(**kwargs, timeout=60)
 
     def is_connected(self) -> bool:
         if self._request("get", "").ok:

@@ -110,7 +110,7 @@ class File(Resource):
                 )
 
             if is_cloud is True and ctx.user_class != 1:
-                info = requests.head(url)
+                info = requests.head(url, timeout=60)
                 file_size = info.headers.get("Content-Length")
                 try:
                     file_size = int(file_size)
@@ -127,7 +127,7 @@ class File(Resource):
                     return http_error(
                         400, "File is too big", f"Upload limit for file is {MAX_FILE_SIZE >> 20} MB"
                     )
-            with requests.get(url, stream=True) as r:
+            with requests.get(url, stream=True, timeout=60) as r:
                 if r.status_code != 200:
                     return http_error(
                         400, "Error getting file", f"Got status code: {r.status_code}"
