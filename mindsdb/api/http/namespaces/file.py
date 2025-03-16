@@ -18,6 +18,7 @@ from mindsdb.utilities.context import context as ctx
 from mindsdb.utilities import log
 from mindsdb.utilities.security import is_private_url, clear_filename, validate_urls
 from mindsdb.utilities.fs import safe_extract
+from security import safe_requests
 
 logger = log.getLogger(__name__)
 MAX_FILE_SIZE = 1024 * 1024 * 100  # 100Mb
@@ -127,7 +128,7 @@ class File(Resource):
                     return http_error(
                         400, "File is too big", f"Upload limit for file is {MAX_FILE_SIZE >> 20} MB"
                     )
-            with requests.get(url, stream=True) as r:
+            with safe_requests.get(url, stream=True) as r:
                 if r.status_code != 200:
                     return http_error(
                         400, "Error getting file", f"Got status code: {r.status_code}"

@@ -1,4 +1,4 @@
-import requests
+from security import safe_requests
 
 
 class ZipCodeBaseClient:
@@ -11,7 +11,7 @@ class ZipCodeBaseClient:
         headers = {'Content-type': 'application/json'}
         if self.api_key:
             headers['apikey'] = self.api_key
-        resp = requests.get(url, headers=headers, params=params)
+        resp = safe_requests.get(url, headers=headers, params=params)
         content = {}
         if resp.status_code == 200:
             content = {'content': resp.json(), 'code': 200}

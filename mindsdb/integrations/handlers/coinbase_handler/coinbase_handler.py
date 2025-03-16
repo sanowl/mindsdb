@@ -6,7 +6,6 @@ import datetime
 from typing import Dict
 
 import pandas as pd
-import requests
 
 from mindsdb.integrations.handlers.coinbase_handler.coinbase_tables import CoinBaseAggregatedTradesTable
 from mindsdb.integrations.libs.api_handler import APIHandler
@@ -16,6 +15,7 @@ from mindsdb.integrations.libs.response import (
 )
 
 from mindsdb_sql import parse_sql
+from security import safe_requests
 
 _BASE_COINBASE_US_URL = 'https://api.exchange.coinbase.com'
 
@@ -81,7 +81,7 @@ class CoinBaseHandler(APIHandler):
         path = "/products/" + symbol + "/candles?granularity=" + str(granularity) + "&start=" + start_time_iso
         headers = self.generate_api_headers("GET", path)
         url = _BASE_COINBASE_US_URL + path
-        response = requests.get(url, headers=headers)
+        response = safe_requests.get(url, headers=headers)
         candles = response.json()
         for candle in candles:
             dt = datetime.datetime.fromtimestamp(candle[0], None).isoformat()

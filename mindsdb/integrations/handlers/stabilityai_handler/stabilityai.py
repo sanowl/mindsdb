@@ -2,7 +2,7 @@ from stability_sdk import client
 from stability_sdk.client import generation
 from PIL import Image
 import io
-import requests
+from security import safe_requests
 
 
 class StabilityAPIClient:
@@ -77,7 +77,7 @@ class StabilityAPIClient:
         if self.api_key is None:
             raise Exception("Missing Stability API key.")
 
-        response = requests.get(url, headers={
+        response = safe_requests.get(url, headers={
             "Authorization": f"Bearer {self.api_key}"
         })
 
@@ -108,7 +108,7 @@ class StabilityAPIClient:
         Returns:
             Downloaded image
         """
-        return Image.open(requests.get(image_url, stream=True).raw)
+        return Image.open(safe_requests.get(image_url, stream=True).raw)
 
     def text_to_image(self, prompt, height=1024, width=1024):
         """Converts the given text to image using stability API.

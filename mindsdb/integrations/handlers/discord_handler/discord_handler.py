@@ -14,6 +14,7 @@ from mindsdb.integrations.libs.response import (
     HandlerResponse as Response,
     RESPONSE_TYPE,
 )
+from security import safe_requests
 
 discord_bot = None
 logger = log.getLogger(__name__)
@@ -56,7 +57,7 @@ class DiscordHandler(APIHandler):
             return StatusResponse(True)
 
         url = f'https://discord.com/api/v10/applications/@me'
-        result = requests.get(
+        result = safe_requests.get(
             url,
             headers={
                 'Authorization': f'Bot {self.connection_data["token"]}',
@@ -141,7 +142,7 @@ class DiscordHandler(APIHandler):
             url = (
                 f'https://discord.com/api/v10/channels/{params["channel_id"]}/messages'
             )
-            result = requests.get(
+            result = safe_requests.get(
                 url,
                 headers={
                     'Authorization': f'Bot {self.connection_data["token"]}',

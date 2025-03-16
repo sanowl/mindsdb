@@ -1,4 +1,3 @@
-import requests
 import pandas as pd
 from mindsdb.utilities import log
 from mindsdb.utilities.config import Config
@@ -6,6 +5,7 @@ from mindsdb_sql.parser import ast
 from mindsdb.integrations.libs.api_handler import APIHandler, APITable
 from mindsdb.integrations.libs.response import HandlerStatusResponse as StatusResponse, HandlerResponse as Response, RESPONSE_TYPE
 from .hn_table import StoriesTable, CommentsTable , HNStoriesTable ,JobStoriesTable, ShowStoriesTable
+from security import safe_requests
 
 logger = log.getLogger(__name__)
 
@@ -39,7 +39,7 @@ class HackerNewsHandler(APIHandler):
 
     def check_connection(self) -> StatusResponse:
         try:
-            response = requests.get(f'{self.base_url}/maxitem.json')
+            response = safe_requests.get(f'{self.base_url}/maxitem.json')
             response.raise_for_status()
             return StatusResponse(True)
         except Exception as e:
@@ -58,14 +58,14 @@ class HackerNewsHandler(APIHandler):
 
     def get_df_from_class(self, table: StoriesTable = None, limit: int = None):
         url = f'{self.base_url}/{table.json_endpoint}'
-        response = requests.get(url)
+        response = safe_requests.get(url)
         data = response.json()
         stories_data = []
         if limit is None:
             limit = len(data)
         for story_id in data[:limit]:
             url = f'{self.base_url}/item/{story_id}.json'
-            response = requests.get(url)
+            response = safe_requests.get(url)
             story_data = response.json()
             stories_data.append(story_data)
         return pd.DataFrame(stories_data, columns=table.columns)
@@ -83,13 +83,13 @@ class HackerNewsHandler(APIHandler):
         elif method_name == 'get_comments':
             item_id = params.get('item_id')
             url = f'{self.base_url}/item/{item_id}.json'
-            response = requests.get(url)
+            response = safe_requests.get(url)
             item_data = response.json()
             if 'kids' in item_data:
                 comments_data = []
                 for comment_id in item_data['kids']:
                     url = f'{self.base_url}/item/{comment_id}.json'
-                    response = requests.get(url)
+                    response = safe_requests.get(url)
                     comment_data = response.json()
                     comments_data.append(comment_data)
                 df = pd.DataFrame(comments_data)

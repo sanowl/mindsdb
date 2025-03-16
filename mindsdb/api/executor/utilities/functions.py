@@ -1,8 +1,7 @@
 import urllib
 import tempfile
 from pathlib import Path
-
-import requests
+from security import safe_requests
 
 
 # def get_column_in_case(columns, name):
@@ -30,7 +29,7 @@ def download_file(url):
     if scheme == '':
         raise Exception(f"Unknown url schema: {url}")
 
-    response = requests.get(url)
+    response = safe_requests.get(url)
     temp_file_path = Path(temp_dir).joinpath('file')
     with open(str(temp_file_path), 'wb')as file:
         file.write(response.content)

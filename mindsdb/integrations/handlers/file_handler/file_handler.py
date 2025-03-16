@@ -10,7 +10,6 @@ from urllib.parse import urlparse
 
 import filetype
 import pandas as pd
-import requests
 from charset_normalizer import from_bytes
 from mindsdb_sql import parse_sql
 from mindsdb_sql.parser.ast import DropTables, Select
@@ -23,6 +22,7 @@ from mindsdb.integrations.libs.response import RESPONSE_TYPE
 from mindsdb.integrations.libs.response import HandlerResponse as Response
 from mindsdb.integrations.libs.response import HandlerStatusResponse as StatusResponse
 from mindsdb.utilities import log
+from security import safe_requests
 
 logger = log.getLogger(__name__)
 
@@ -392,7 +392,7 @@ class FileHandler(DatabaseHandler):
     def _fetch_url(url: str) -> str:
         temp_dir = tempfile.mkdtemp(prefix="mindsdb_file_url_")
         try:
-            r = requests.get(url, stream=True)
+            r = safe_requests.get(url, stream=True)
             if r.status_code == 200:
                 with open(os.path.join(temp_dir, "file"), "wb") as f:
                     for chunk in r:

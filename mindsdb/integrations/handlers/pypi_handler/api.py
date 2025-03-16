@@ -4,6 +4,7 @@ from typing import Collection, Dict
 import numpy as np
 import pandas as pd
 import requests
+from security import safe_requests
 
 SERVICE_URL = r"https://pypistats.org"
 API_BASE_URL = path.join(SERVICE_URL, "api/packages/")
@@ -35,7 +36,7 @@ class PyPI:
         if period:
             params["period"] = period
 
-        payload = requests.get(endpoint, params=params).json()["data"]
+        payload = safe_requests.get(endpoint, params=params).json()["data"]
 
         df = self.__to_dataframe(payload, [0])
 
@@ -56,7 +57,7 @@ class PyPI:
         if mirrors is not None:
             params["mirrors"] = str(mirrors).lower()
 
-        payload = requests.get(endpoint, params=params).json()["data"]
+        payload = safe_requests.get(endpoint, params=params).json()["data"]
         df = self.__to_dataframe(payload, limit=self.limit)
 
         return df
@@ -76,7 +77,7 @@ class PyPI:
         if version is not None:
             params["version"] = version
 
-        payload = requests.get(endpoint, params=params).json()["data"]
+        payload = safe_requests.get(endpoint, params=params).json()["data"]
         df = self.__to_dataframe(payload, limit=self.limit)
 
         return df
@@ -96,7 +97,7 @@ class PyPI:
         if version is not None:
             params["version"] = version
 
-        payload = requests.get(endpoint, params=params).json()["data"]
+        payload = safe_requests.get(endpoint, params=params).json()["data"]
         df = self.__to_dataframe(payload, limit=self.limit)
 
         return df
@@ -116,7 +117,7 @@ class PyPI:
         if os is not None:
             params["os"] = os
 
-        payload = requests.get(endpoint, params=params).json()["data"]
+        payload = safe_requests.get(endpoint, params=params).json()["data"]
         df = self.__to_dataframe(payload, limit=self.limit)
 
         return df
@@ -146,7 +147,7 @@ class PyPI:
     @classmethod
     def is_connected(cls) -> Dict:
         try:
-            _ = requests.get(SERVICE_URL, timeout=5).raise_for_status()
+            _ = safe_requests.get(SERVICE_URL, timeout=5).raise_for_status()
             return {"status": True}
         except requests.exceptions.RequestException as e:
             return {"status": False, "message": e}

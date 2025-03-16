@@ -7,6 +7,7 @@ import requests
 from mindsdb.integrations.libs.const import HANDLER_CONNECTION_ARG_TYPE as ARG_TYPE
 from collections import OrderedDict
 import pandas as pd
+from security import safe_requests
 
 logger = log.getLogger(__name__)
 
@@ -58,7 +59,7 @@ class StrapiHandler(APIHandler):
 
         try:
             headers = {"Authorization": f"Bearer {self._api_token}"}
-            response = requests.get(f"{self._base_url}", headers=headers)
+            response = safe_requests.get(f"{self._base_url}", headers=headers)
             if response.status_code == 200:
                 self.connection = response
                 self.is_connected = True
@@ -95,7 +96,7 @@ class StrapiHandler(APIHandler):
             if method.upper() in ('POST', 'PUT', 'DELETE'):
                 response = requests.request(method, url, headers=headers, params=params, data=json_data)
             else:
-                response = requests.get(url, headers=headers, params=params)
+                response = safe_requests.get(url, headers=headers, params=params)
 
             if response.status_code == 200:
                 data = response.json()

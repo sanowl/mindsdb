@@ -8,6 +8,7 @@ import requests
 
 from mindsdb.utilities.config import Config
 from mindsdb.utilities import log
+from security import safe_requests
 
 logger = log.getLogger(__name__)
 
@@ -21,7 +22,7 @@ def download_gui(destignation, version):
     resources = [{"url": bucket + "dist-V" + version + ".zip", "path": dist_zip_path}]
 
     def get_resources(resource):
-        response = requests.get(resource["url"])
+        response = safe_requests.get(resource["url"])
         if response.status_code != requests.status_codes.codes.ok:
             raise Exception(f"Error {response.status_code} GET {resource['url']}")
         open(resource["path"], "wb").write(response.content)
