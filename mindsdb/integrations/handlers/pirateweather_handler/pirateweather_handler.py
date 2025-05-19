@@ -216,7 +216,7 @@ class PirateWeatherAPIHandler(APIHandler):
         query += "?" + "&".join([f"{k}={v}" for k, v in opt_params.items() if v])
 
         # Call the API
-        response = requests.get(query)
+        response = requests.get(query, timeout=60)
         response.raise_for_status()
 
         # Parse the response

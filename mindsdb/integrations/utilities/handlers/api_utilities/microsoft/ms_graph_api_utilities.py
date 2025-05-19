@@ -23,16 +23,16 @@ class MSGraphAPIBaseClient:
     def _make_request(self, api_url: str, params: Optional[Dict] = None, data: Optional[Dict] = None, method: str = "GET") -> Union[Dict, object]:
         headers = {"Authorization": f"Bearer {self.access_token}"}
         if method == "GET":
-            response = requests.get(api_url, headers=headers, params=params)
+            response = requests.get(api_url, headers=headers, params=params, timeout=60)
         elif method == "POST":
-            response = requests.post(api_url, headers=headers, json=data)
+            response = requests.post(api_url, headers=headers, json=data, timeout=60)
         else:
             raise NotImplementedError(f"Method {method} not implemented")
         if response.status_code == 429:
             if "Retry-After" in response.headers:
                 pause_time = float(response.headers["Retry-After"])
                 time.sleep(pause_time)
-                response = requests.get(api_url, headers=headers, params=params)
+                response = requests.get(api_url, headers=headers, params=params, timeout=60)
         if response.status_code not in [200, 201]:
             raise requests.exceptions.RequestException(response.text)
         if response.headers["Content-Type"] == "application/octet-stream":

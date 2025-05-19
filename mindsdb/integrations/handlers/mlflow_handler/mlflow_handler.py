@@ -42,7 +42,7 @@ class MLflowHandler(BaseMLEngine):
         self._check_model_url(args['predict_url'])
         resp = requests.post(args['predict_url'],
                              data=df.to_json(orient='records'),
-                             headers={'content-type': 'application/json; format=pandas-records'})
+                             headers={'content-type': 'application/json; format=pandas-records'}, timeout=60)
         answer = resp.json()
         predictions = pd.DataFrame({args['target']: answer})
         return predictions
@@ -76,7 +76,7 @@ class MLflowHandler(BaseMLEngine):
     def _check_model_url(url):
         """ try post without data, check status code not in (not_found, method_not_allowed) """
         try:
-            resp = requests.post(url)
+            resp = requests.post(url, timeout=60)
             if resp.status_code in (404, 405):
                 raise Exception(f'Model url is incorrect, status_code: {resp.status_code}')
         except requests.RequestException as e:

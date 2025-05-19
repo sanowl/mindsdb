@@ -33,7 +33,7 @@ class FrappeClient(object):
         """
         document_response = requests.get(
             f'{self.base_url}/resource/{doctype}/{name}',
-            headers=self.headers)
+            headers=self.headers, timeout=60)
         if not document_response.ok:
             document_response.raise_for_status()
         return document_response.json()['data']
@@ -60,7 +60,7 @@ class FrappeClient(object):
             f'{self.base_url}/resource/{doctype}/',
             params=params,
             headers=self.headers,
-            allow_redirects=False)
+            allow_redirects=False, timeout=60)
         if documents_response.is_redirect:
             # We have to manually redirect to preserve the 'Authorization' header.
             # See https://github.com/request/request/pull/1184/commits/210b326fd8625f358e06c59dc11e74468b1de515.
@@ -71,7 +71,7 @@ class FrappeClient(object):
                 redirect_url,
                 params=params,
                 headers=self.headers,
-                allow_redirects=False)
+                allow_redirects=False, timeout=60)
 
         if not documents_response.ok:
             documents_response.raise_for_status()
@@ -91,7 +91,7 @@ class FrappeClient(object):
         post_response = requests.post(
             f'{self.base_url}/resource/{doctype}',
             json=data,
-            headers=self.headers)
+            headers=self.headers, timeout=60)
         if not post_response.ok:
             if 400 <= post_response.status_code < 600:
                 raise requests.HTTPError(f'{post_response.reason}: {post_response.text}', response=post_response)
@@ -107,5 +107,5 @@ class FrappeClient(object):
         # No ping or similar endpoint exists, so we'll try getting the logged in user.
         user_response = requests.get(
             f'{self.base_url}/method/frappe.auth.get_logged_user',
-            headers=self.headers)
+            headers=self.headers, timeout=60)
         return user_response.ok

@@ -30,7 +30,7 @@ def download_file(url):
     if scheme == '':
         raise Exception(f"Unknown url schema: {url}")
 
-    response = requests.get(url)
+    response = requests.get(url, timeout=60)
     temp_file_path = Path(temp_dir).joinpath('file')
     with open(str(temp_file_path), 'wb')as file:
         file.write(response.content)

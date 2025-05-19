@@ -66,7 +66,7 @@ class DremioHandler(DatabaseHandler):
 
         data = '{' + f'"userName": "{self.connection_data["username"]}","password": "{self.connection_data["password"]}"' + '}'
 
-        response = requests.post(self.base_url + '/apiv2/login', headers=headers, data=data)
+        response = requests.post(self.base_url + '/apiv2/login', headers=headers, data=data, timeout=60)
 
         return {
             'Authorization': '_dremio' + response.json()['token'],
@@ -122,7 +122,7 @@ class DremioHandler(DatabaseHandler):
         data = '{' + f'"sql": "{query}"' + '}'
 
         try:
-            sql_result = requests.post(self.base_url + '/api/v3/sql', headers=auth_headers, data=data)
+            sql_result = requests.post(self.base_url + '/api/v3/sql', headers=auth_headers, data=data, timeout=60)
 
             job_id = sql_result.json()['id']
 
@@ -133,7 +133,7 @@ class DremioHandler(DatabaseHandler):
 
             logger.info('Waiting for the job to complete...')
 
-            job_status = requests.request("GET", self.base_url + "/api/v3/job/" + job_id, headers=auth_headers).json()[
+            job_status = requests.request("GET", self.base_url + "/api/v3/job/" + job_id, headers=auth_headers, timeout=60).json()[
                 'jobState']
 
             while job_status != 'COMPLETED':
@@ -142,10 +142,10 @@ class DremioHandler(DatabaseHandler):
                     break
 
                 time.sleep(2)
-                job_status = requests.request("GET", self.base_url + "/api/v3/job/" + job_id, headers=auth_headers).json()[
+                job_status = requests.request("GET", self.base_url + "/api/v3/job/" + job_id, headers=auth_headers, timeout=60).json()[
                     'jobState']
 
-            job_result = json.loads(requests.request("GET", self.base_url + "/api/v3/job/" + job_id + "/results", headers=auth_headers).text)
+            job_result = json.loads(requests.request("GET", self.base_url + "/api/v3/job/" + job_id + "/results", headers=auth_headers, timeout=60).text)
 
             if 'errorMessage' not in job_result:
                 response = Response(

@@ -4,7 +4,7 @@ import requests
 class NPM:
 
     def __init__(self, package_name: str):
-        resp = requests.get("https://api.npms.io/v2/package/" + package_name)
+        resp = requests.get("https://api.npms.io/v2/package/" + package_name, timeout=60)
         if not resp or resp.status_code != 200:
             raise Exception(f"Unable to get package datails: '{package_name}'")
         self.data = resp.json()
@@ -14,7 +14,7 @@ class NPM:
 
     @staticmethod
     def is_connected():
-        return True if requests.get("https://api.npms.io/v2/search?q=a&size=1").status_code == 200 else False
+        return True if requests.get("https://api.npms.io/v2/search?q=a&size=1", timeout=60).status_code == 200 else False
 
     def get_cols_in(self, path, cols):
         curr_root = self.data

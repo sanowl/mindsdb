@@ -63,7 +63,7 @@ class InstatusHandler(APIHandler):
         if self._api_key:
             try:
                 headers = {"Authorization": f"Bearer {self._api_key}"}
-                response = requests.get(f"{self._base_url}/v2/pages", headers=headers)
+                response = requests.get(f"{self._base_url}/v2/pages", headers=headers, timeout=60)
 
                 if response.status_code == 200:
                     self.connection = response
@@ -102,7 +102,7 @@ class InstatusHandler(APIHandler):
         if method.upper() in ('GET', 'POST', 'PUT', 'DELETE'):
             headers['Content-Type'] = 'application/json'
 
-            response = requests.request(method, url, headers=headers, params=params, json=json_data)
+            response = requests.request(method, url, headers=headers, params=params, json=json_data, timeout=60)
 
             if response.status_code == 200:
                 data = response.json()

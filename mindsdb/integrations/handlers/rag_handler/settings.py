@@ -414,7 +414,7 @@ def url_to_documents(urls: Union[List[str], str]) -> List[Document]:
         urls = [urls]
 
     for url in urls:
-        response = requests.get(url, headers=None).text
+        response = requests.get(url, headers=None, timeout=60).text
         html_to_text = html2text.html2text(response)
         documents.append(Document(page_content=html_to_text, metadata={"source": url}))
 
