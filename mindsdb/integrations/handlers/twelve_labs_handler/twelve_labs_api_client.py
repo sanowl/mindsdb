@@ -5,6 +5,7 @@ from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 from mindsdb.utilities import log
 from mindsdb.integrations.handlers.twelve_labs_handler.settings import twelve_labs_handler_config
+from security import safe_requests
 
 
 logger = log.getLogger(__name__)
@@ -484,7 +485,7 @@ class TwelveLabsAPIClient:
         headers = headers if headers else self.headers
 
         if method == "GET":
-            response = requests.get(
+            response = safe_requests.get(
                 url=self.base_url + endpoint,
                 headers=headers,
                 params=data if data else {},

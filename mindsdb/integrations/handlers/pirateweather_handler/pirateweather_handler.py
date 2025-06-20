@@ -2,7 +2,6 @@ import os
 from typing import Any
 
 import pandas as pd
-import requests
 from mindsdb_sql import parse_sql
 from mindsdb_sql.parser import ast
 
@@ -12,6 +11,7 @@ from mindsdb.integrations.libs.api_handler import APIHandler, APITable
 from mindsdb.integrations.libs.response import HandlerResponse, HandlerStatusResponse
 from mindsdb.integrations.utilities.sql_utils import extract_comparison_conditions
 from mindsdb.utilities.config import Config
+from security import safe_requests
 
 
 class PirateWeatherAPIBaseTable(APITable):
@@ -216,7 +216,7 @@ class PirateWeatherAPIHandler(APIHandler):
         query += "?" + "&".join([f"{k}={v}" for k, v in opt_params.items() if v])
 
         # Call the API
-        response = requests.get(query)
+        response = safe_requests.get(query)
         response.raise_for_status()
 
         # Parse the response

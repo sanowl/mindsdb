@@ -1,5 +1,6 @@
 import requests
 import uuid
+from security import safe_requests
 
 
 class ClipdropClient:
@@ -30,7 +31,7 @@ class ClipdropClient:
 
     def download_image(self, url):
         img_ext = self.image_extension_check(url)
-        res = requests.get(url)
+        res = safe_requests.get(url)
         return {"img_ext": img_ext, "content": res.content}
 
     def remove_text(self, img_url):

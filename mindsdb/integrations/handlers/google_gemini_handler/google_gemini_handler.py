@@ -2,7 +2,6 @@ import os
 from typing import Dict, Optional
 
 from PIL import Image
-import requests
 import numpy as np
 from io import BytesIO
 import json
@@ -14,6 +13,7 @@ from mindsdb.utilities import log
 from mindsdb.utilities.config import Config
 from mindsdb.integrations.libs.llm.utils import get_completed_prompts
 import concurrent.futures
+from security import safe_requests
 
 logger = log.getLogger(__name__)
 
@@ -314,7 +314,7 @@ class GoogleGeminiHandler(BaseMLEngine):
     def vision_worker(self, args: Dict, df: pd.DataFrame):
         def get_img(url):
             # URL Validation
-            response = requests.get(url)
+            response = safe_requests.get(url)
             if response.status_code == 200 and response.headers.get(
                 "content-type", ""
             ).startswith("image/"):

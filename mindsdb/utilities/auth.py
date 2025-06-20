@@ -2,6 +2,7 @@ import requests
 import textwrap
 
 from mindsdb.utilities.config import Config
+from security import safe_requests
 
 
 def get_aws_meta_data() -> dict:
@@ -16,7 +17,7 @@ def get_aws_meta_data() -> dict:
         'instance-id': None
     }
     for key in aws_meta_data.keys():
-        resp = requests.get(
+        resp = safe_requests.get(
             f'http://169.254.169.254/latest/meta-data/{key}',
             timeout=1
         )

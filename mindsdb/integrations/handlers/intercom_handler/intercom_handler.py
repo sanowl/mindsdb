@@ -8,6 +8,7 @@ from collections import OrderedDict
 from mindsdb.integrations.libs.const import HANDLER_CONNECTION_ARG_TYPE as ARG_TYPE
 import json
 from mindsdb.utilities import log
+from security import safe_requests
 
 logger = log.getLogger(__name__)
 
@@ -59,7 +60,7 @@ class IntercomHandler(APIHandler):
 
         if self._headers:
             try:
-                response = requests.get(
+                response = safe_requests.get(
                     url=self._baseUrl,
                     headers=self._headers
                 )

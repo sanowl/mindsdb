@@ -9,9 +9,9 @@ from mindsdb.integrations.libs.response import (
 )
 
 from .utils.helpers import *
-import requests
 import pandas as pd
 from mindsdb_sql import parse_sql, get_lexer_parser
+from security import safe_requests
 
 logger = log.getLogger(__name__)
 
@@ -87,7 +87,7 @@ class EventStoreDB(DatabaseHandler):
 
     def check_connection(self) -> StatusResponse:
         try:
-            response = requests.get(build_health_url(self.basic_url), verify=self.tlsverify)
+            response = safe_requests.get(build_health_url(self.basic_url), verify=self.tlsverify)
             if response.status_code == 204:
                 return StatusResponse(True)
         except Exception as e:
@@ -101,7 +101,7 @@ class EventStoreDB(DatabaseHandler):
                 'embed': 'tryharder'
             }
             stream_endpoint = build_stream_url(self.basic_url, stream_name)
-            response = requests.get(stream_endpoint, params=params, headers=self.headers, verify=self.tlsverify)
+            response = safe_requests.get(stream_endpoint, params=params, headers=self.headers, verify=self.tlsverify)
             entries = []
             if response is not None and response.status_code == 200:
                 json_response = response.json()
@@ -115,7 +115,7 @@ class EventStoreDB(DatabaseHandler):
                             if 'relation' in link:
                                 if link['relation'] == 'next':
                                     end_of_stream = False
-                                    response = requests.get(build_next_url(link['uri'], self.read_batch_size),
+                                    response = safe_requests.get(build_next_url(link['uri'], self.read_batch_size),
                                                             params=params, headers=self.headers, verify=self.tlsverify)
                                     json_response = response.json()
                                     for entry in json_response["entries"]:
@@ -148,7 +148,7 @@ class EventStoreDB(DatabaseHandler):
             'embed': 'tryharder'
         }
         stream_endpoint = build_streams_url(self.basic_url)
-        response = requests.get(stream_endpoint, params=params, headers=self.headers, verify=self.tlsverify)
+        response = safe_requests.get(stream_endpoint, params=params, headers=self.headers, verify=self.tlsverify)
         streams = []
         if response is not None and response.status_code == 200:
             json_response = response.json()
@@ -162,7 +162,7 @@ class EventStoreDB(DatabaseHandler):
                         if 'relation' in link:
                             if link['relation'] == 'next':
                                 end_of_stream = False
-                                response = requests.get(build_next_url(link['uri'], self.read_batch_size),
+                                response = safe_requests.get(build_next_url(link['uri'], self.read_batch_size),
                                                         params=params, headers=self.headers, verify=self.tlsverify)
                                 json_response = response.json()
                                 for entry in json_response["entries"]:
@@ -183,7 +183,7 @@ class EventStoreDB(DatabaseHandler):
             'embed': 'tryharder'
         }
         stream_endpoint = build_stream_url_last_event(self.basic_url, table_name)
-        response = requests.get(stream_endpoint, params=params, headers=self.headers, verify=self.tlsverify)
+        response = safe_requests.get(stream_endpoint, params=params, headers=self.headers, verify=self.tlsverify)
         entry = None
         if response is not None and response.status_code == 200:
             json_response = response.json()

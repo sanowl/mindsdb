@@ -1,5 +1,4 @@
 import shopify
-import requests
 
 from mindsdb.integrations.handlers.shopify_handler.shopify_tables import ProductsTable, CustomersTable, OrdersTable, InventoryLevelTable, LocationTable, CustomerReviews, CarrierServiceTable, ShippingZoneTable, SalesChannelTable
 from mindsdb.integrations.libs.api_handler import APIHandler
@@ -10,6 +9,7 @@ from mindsdb.integrations.libs.response import (
 from mindsdb.utilities import log
 from mindsdb_sql import parse_sql
 from mindsdb.integrations.libs.api_handler_exceptions import InvalidNativeQuery, ConnectionFailed, MissingConnectionParams
+from security import safe_requests
 
 logger = log.getLogger(__name__)
 
@@ -116,7 +116,7 @@ class ShopifyHandler(APIHandler):
                 "accept": "application/json",
                 "Content-Type": "application/json"
             }
-            if requests.get(url, headers=headers).status_code == 200:
+            if safe_requests.get(url, headers=headers).status_code == 200:
                 response.success = True
             else:
                 response.success = False

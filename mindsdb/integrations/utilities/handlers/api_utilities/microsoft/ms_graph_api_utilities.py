@@ -3,6 +3,7 @@ import requests
 from typing import Optional, Dict, Union, List
 
 from mindsdb.utilities import log
+from security import safe_requests
 
 logger = log.getLogger(__name__)
 
@@ -23,7 +24,7 @@ class MSGraphAPIBaseClient:
     def _make_request(self, api_url: str, params: Optional[Dict] = None, data: Optional[Dict] = None, method: str = "GET") -> Union[Dict, object]:
         headers = {"Authorization": f"Bearer {self.access_token}"}
         if method == "GET":
-            response = requests.get(api_url, headers=headers, params=params)
+            response = safe_requests.get(api_url, headers=headers, params=params)
         elif method == "POST":
             response = requests.post(api_url, headers=headers, json=data)
         else:
@@ -32,7 +33,7 @@ class MSGraphAPIBaseClient:
             if "Retry-After" in response.headers:
                 pause_time = float(response.headers["Retry-After"])
                 time.sleep(pause_time)
-                response = requests.get(api_url, headers=headers, params=params)
+                response = safe_requests.get(api_url, headers=headers, params=params)
         if response.status_code not in [200, 201]:
             raise requests.exceptions.RequestException(response.text)
         if response.headers["Content-Type"] == "application/octet-stream":
