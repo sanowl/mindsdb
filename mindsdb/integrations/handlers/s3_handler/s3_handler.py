@@ -224,7 +224,7 @@ class S3Handler(DatabaseHandler):
         """
         connection = self.connect()
         try:
-            connection.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name} AS SELECT * FROM 's3://{self.connection_data['bucket']}/{self.key}'")
+            connection.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name} AS SELECT * FROM ?", ('s3://{0}/{1}'.format(self.connection_data['bucket'], self.key), ))
         except CatalogException as e:
             logger.error(f'Error creating table {self.table_name} from file {self.key} in {self.connection_data["bucket"]}, {e}!')
             raise e
