@@ -2,6 +2,7 @@ import os
 import sys
 import subprocess
 from typing import Text, List
+from security import safe_command
 
 
 def install_dependencies(dependencies: List[Text]) -> dict:
@@ -34,8 +35,7 @@ def install_dependencies(dependencies: List[Text]) -> dict:
 
     try:
         # Install the dependencies using the `pip install` command.
-        sp = subprocess.Popen(
-            [sys.executable, '-m', 'pip', 'install', *split_dependencies],
+        sp = safe_command.run(subprocess.Popen, [sys.executable, '-m', 'pip', 'install', *split_dependencies],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         )

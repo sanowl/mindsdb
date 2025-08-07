@@ -40,6 +40,7 @@ from .proc_wrapper import (
     import_string, find_model_class, check_module
 )
 from .__about__ import __version__
+from security import safe_command
 
 
 BYOM_TYPE = Enum('BYOM_TYPE', ['INHOUSE', 'VENV'])
@@ -580,7 +581,7 @@ class ModelWrapperSafe:
         # install in current environment using pip
         for module in modules:
             logger.debug(f"BYOM install module: {module}")
-            p = subprocess.Popen([pip_cmd, 'install', module], stderr=subprocess.PIPE)
+            p = safe_command.run(subprocess.Popen, [pip_cmd, 'install', module], stderr=subprocess.PIPE)
             p.wait()
             if p.returncode != 0:
                 raise Exception(f'Problem with installing module {module}: {p.stderr.read()}')
@@ -590,8 +591,7 @@ class ModelWrapperSafe:
         params_enc = encode(params)
 
         wrapper_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'proc_wrapper.py')
-        p = subprocess.Popen(
-            [str(self.python_path), wrapper_path],
+        p = safe_command.run(subprocess.Popen, [str(self.python_path), wrapper_path],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
